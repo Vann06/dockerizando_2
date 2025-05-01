@@ -54,6 +54,11 @@ const routes = [
         name: 'accountDetails',
         component: AccountDetailView
       },
+      {
+        path:'/faq',
+        name: 'faq',
+        component: () => import('@/views/FaqView.vue')
+      },
     ]
   },
   {
