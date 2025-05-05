@@ -50,9 +50,14 @@
               >
                 <div class="faq-question" @click="navigateToResult(result)">
                   <span class="section-badge">{{getSectionName(result.section)}}</span>
-                  <span>{{result.question}}</span>
+                  <span class="question-text">{{result.question}}</span>
                   <span class="icon">+</span>
                 </div>
+                <transition name="slide">
+                  <div class="faq-answer" v-show="activeAnswers[result.section][result.index]">
+                    <p>{{result.answer}}</p>
+                  </div>
+                </transition>
               </div>
             </div>
             <div v-else class="no-results">
@@ -71,7 +76,7 @@
                 :key="'order-'+index"
               >
                 <div class="faq-question" @click="toggleFAQ('order', index)">
-                  <span>{{item.question}}</span>
+                  <span class="question-text">{{item.question}}</span>
                   <span class="icon">{{activeAnswers.order[index] ? '−' : '+'}}</span>
                 </div>
                 <transition name="slide">
@@ -91,7 +96,7 @@
                 :key="'product-'+index"
               >
                 <div class="faq-question" @click="toggleFAQ('product', index)">
-                  <span>{{item.question}}</span>
+                  <span class="question-text">{{item.question}}</span>
                   <span class="icon">{{activeAnswers.product[index] ? '−' : '+'}}</span>
                 </div>
                 <transition name="slide">
@@ -111,7 +116,7 @@
                 :key="'shipping-'+index"
               >
                 <div class="faq-question" @click="toggleFAQ('shipping', index)">
-                  <span>{{item.question}}</span>
+                  <span class="question-text">{{item.question}}</span>
                   <span class="icon">{{activeAnswers.shipping[index] ? '−' : '+'}}</span>
                 </div>
                 <transition name="slide">
@@ -131,7 +136,7 @@
                 :key="'return-'+index"
               >
                 <div class="faq-question" @click="toggleFAQ('return', index)">
-                  <span>{{item.question}}</span>
+                  <span class="question-text">{{item.question}}</span>
                   <span class="icon">{{activeAnswers.return[index] ? '−' : '+'}}</span>
                 </div>
                 <transition name="slide">
@@ -151,7 +156,7 @@
                 :key="'quotation-'+index"
               >
                 <div class="faq-question" @click="toggleFAQ('quotation', index)">
-                  <span>{{item.question}}</span>
+                  <span class="question-text">{{item.question}}</span>
                   <span class="icon">{{activeAnswers.quotation[index] ? '−' : '+'}}</span>
                 </div>
                 <transition name="slide">
@@ -171,7 +176,7 @@
                 :key="'technical-'+index"
               >
                 <div class="faq-question" @click="toggleFAQ('technical', index)">
-                  <span>{{item.question}}</span>
+                  <span class="question-text">{{item.question}}</span>
                   <span class="icon">{{activeAnswers.technical[index] ? '−' : '+'}}</span>
                 </div>
                 <transition name="slide">
@@ -357,6 +362,7 @@
       
       navigateToResult(result) {
         this.setActiveSection(result.section + 's'); // Añadir 's' para coincidir con activeSection
+        this.searchQuery = '';
         this.$nextTick(() => {
           this.toggleFAQ(result.section, result.index);
         });
@@ -590,6 +596,23 @@
     font-size: 1.3rem;
     color: #780116;
     transition: all 0.3s;
+    flex-shrink: 0;
+    margin-left: 15px;
+  }
+  
+  .faq-question .question-text {
+    flex-grow: 1;
+    margin-right: 15px;
+  }
+  
+  .section-badge {
+    background-color: #780116;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-right: 15px;
+    flex-shrink: 0;
   }
   
   .faq-answer {
@@ -706,6 +729,13 @@
     .help-section, .contact-promo {
       padding: 20px;
     }
+    
+    .faq-question {
+      padding: 15px 20px;
+    }
+    
+    .section-badge {
+      margin-right: 10px;
+    }
   }
   </style>
-  
