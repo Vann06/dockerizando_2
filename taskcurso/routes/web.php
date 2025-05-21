@@ -14,12 +14,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Admin panel 
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('products', ProductController::class)
-        ->parameters(['products' => 'product'])
-        ->names('products');
 
+
+
+// RUTAS ADMIN (requieren login + ser admin)
+Route::middleware(['web','auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', fn () => view('admin.dashboard'))->name('dashboard');
+
+    Route::resource('products', ProductController::class)->names('products');
     Route::resource('faqs', FaqAdminController::class)->names('faqs');
     Route::resource('categories', CategoryAdminController::class)->names('categories');
     Route::resource('themes', ThemeAdminController::class)->names('themes');
@@ -32,8 +34,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 
-
 Route::get('/ping', function () {
     return 'pong';
 });
+
+Route::get('/login', function () {
+    return redirect('/'); // o cualquier otra página segura
+})->name('login');
 

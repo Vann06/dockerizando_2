@@ -11,8 +11,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ThemeController;
 
 
-
-
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -52,4 +50,15 @@ Route::get('/categorias', [CategoryController::class, 'apiIndex']);
 // Tematicas
 Route::get('/tematicas', [ThemeController::class, 'apiIndex']);
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+// Routas para la autenticacion
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [UserController::class, 'show']);
+    Route::put('/user', [UserController::class, 'update']);
+    Route::delete('/user', [UserController::class, 'destroy']);
+}); 
 
