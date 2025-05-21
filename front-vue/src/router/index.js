@@ -85,18 +85,27 @@ const router = createRouter({
 //Middleware para proteger las rutas 
 router.beforeEach((to, from, next) => {
   const store = useUserStore()
+  const token = localStorage.getItem('auth_token')
 
-  // Si NO esta logeado lo manda a la seccion de login
-  if (to.meta.requiresAuth && !store.user){
+  // No hay token ni usuario
+  if (to.meta.requiresAuth && (!token || !store.user)) {
     return next('/account/login')
   }
-  // Si SI esta logeado lo manda a su cuenta personal
-  if (to.meta.requiresGuest && store.user){
+
+  // Si el usuario es ADMIN y quiere entrar a /account, lo redirige al admin panel
+  if (to.path === '/account/login' && store.user?.role === 'admin') {
+    return window.location.href = 'http://localhost:8000/admin/products'
+  }
+
+
+  // Si es CLIENTE y trata de entrar a una ruta solo para admins
+  if (to.meta.adminOnly && store.user?.role !== 'admin') {
     return next('/account/orders')
   }
 
   next()
 })
+
 
 
 export default router

@@ -13,13 +13,29 @@
         <RouterLink to="/account/details" class="nav-link" active-class="active">
           <i class="fa fa-user"></i> Account Detail
         </RouterLink>
-        <RouterLink to="/account/logout" class="nav-link">
+        <RouterLink to="#" class="nav-link" @click="logout">
           <i class="fa fa-sign-out-alt"></i> Logout
         </RouterLink>
       </nav>
     </aside>
   </template>
-  
+
+<script setup>
+import { useUserStore } from '@/stores/userStore';
+import { useRouter } from 'vue-router';
+
+const userStore = useUserStore();
+const router = useRouter();
+
+const logout = () => {
+  localStorage.removeItem('auth_token');
+  delete axios.defaults.headers.common['Authorization'];
+  userStore.clearUser();
+  router.push('/account/login');
+}
+
+
+</script>  
   <style scoped>
   .sidebar {
     width: 250px;

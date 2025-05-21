@@ -15,6 +15,34 @@ import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
 import SignUpInfo from '@/components/SignUpInfo.vue'
 import LoginForm from '@/components/LoginForm.vue'
+import { useUserStore } from '@/stores/userStore.js';
+import { ref } from 'vue';
+import axios from 'axios';
+
+const email = ref('');
+const password = ref('');
+
+const userStore = useUserStore();
+
+const handleLogin = async () => {
+  try {
+    const response = await axios.post('http://localhost:8000/api/login',{
+      email: email.value,
+      password: password.value
+    })
+
+    localStorage.setItem('auth_token', response.data.token);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+    userStore.setUser(response.data.user);
+    router.push('/account/orders')
+  }catch (error) {
+    if (error.response?.data?.errors) {
+      errors.value = error.response.data.errors
+    } else {
+      console.error('Error:', error);
+    }
+  }
+}
 </script>
 
 <style scoped>

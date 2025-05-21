@@ -42,9 +42,30 @@
             <img src="/img/cart-icon.svg" alt="Cart" class="icon-img" />
           </RouterLink>
 
-          <RouterLink to="/account/login" class="icon-button">
+          <RouterLink
+            v-if="userStore.isLoggedIn && userStore.user?.role === 'admin'"
+            to="/account/login"
+            class="icon-button"
+          >
+            <img src="/img/user-icon.svg" alt="Admin" class="icon-img" />
+          </RouterLink>
+
+          <RouterLink
+            v-else-if="userStore.isLoggedIn"
+            to="/account/orders"
+            class="icon-button"
+          >
             <img src="/img/user-icon.svg" alt="User" class="icon-img" />
           </RouterLink>
+
+          <RouterLink
+            v-else
+            to="/account/login"
+            class="icon-button"
+          >
+            <img src="/img/user-icon.svg" alt="Guest" class="icon-img" />
+          </RouterLink>
+
         </div>
       </div>
     </div>
@@ -54,6 +75,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/userStore.js'
+
+const userStore = useUserStore()
 
 const isMenuOpen = ref(false)
 const toggleMenu = () => {
